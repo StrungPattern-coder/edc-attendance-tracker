@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import apiClient from "../services/api"; // Updated to the correct path
+import { login } from "../services/auth"; // Import login function from auth.js
 
 const LoginPage = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-  const navigate = useNavigate(); // Updated to use React Router v6+ hook
+  const navigate = useNavigate();
 
   const handleLogin = async () => {
     try {
@@ -15,15 +15,13 @@ const LoginPage = () => {
         return;
       }
 
-      // Make an API call to the backend
-      const response = await apiClient.post("/admin/login", { username, password });
+      const token = await login(username, password);
 
-      // Save the token to localStorage
-      const token = response.data.token;
-      localStorage.setItem("authToken", token);
-
-      // Redirect to attendance page on successful login
-      navigate("/attendance");
+      if (token) {
+        navigate("/attendance"); // Redirect to the attendance page if login is successful
+      } else {
+        setError("Invalid username or password");
+      }
     } catch (err) {
       setError(err.response?.data?.message || "Login failed. Please try again.");
     }

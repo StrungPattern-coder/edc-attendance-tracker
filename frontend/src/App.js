@@ -1,30 +1,38 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import QRCodeScanner from "react-qr-scanner"; // QR scanner library
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom"; // Added Link for Signup
 import "./App.css"; // Import your existing CSS
-import { fetchAttendance } from "./services/api"; // Import API function
+import { fetchAttendance, markAttendance } from "../services/api"; // Import API functions
 
 function App() {
   const [attendance, setAttendance] = useState([]);
   const [theme, setTheme] = useState("light"); // Example theme state
   const navigate = useNavigate(); // For redirecting
 
+  useEffect(() => {
+    // Fetch attendance records from API when the component is mounted
+    const fetchData = async () => {
+      try {
+        const response = await fetchAttendance();
+        setAttendance(response.data);
+      } catch (error) {
+        console.error("Error fetching attendance data:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
   const handleScan = async (data) => {
     if (data) {
       try {
         // API call to mark attendance
-        const response = await fetch("http://localhost:3000/mark-attendance", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ scannedData: data.text }), // Assuming QR code data contains user ID or event info
-        });
+        const response = await markAttendance(data.text);
 
-        if (response.ok) {
+        if (response.success) {
           console.log("Attendance marked successfully");
-          const result = await response.json();
-          setAttendance(result.attendance); // Update attendance records from the API
+          const updatedAttendance = await fetchAttendance();
+          setAttendance(updatedAttendance.data); // Update attendance records from the API
         } else {
           console.error("Error marking attendance");
         }
@@ -41,9 +49,17 @@ function App() {
   return (
     <div className={`App ${theme}`}>
       <h1>Admin Dashboard</h1>
-      <button className="theme-toggle" onClick={() => setTheme(theme === "light" ? "dark" : "light")}>
+      
+      {/* Signup Link */}
+      <Link to="/signup">Don't have an account? Signup here</Link>
+
+      <button
+        className="theme-toggle"
+        onClick={() => setTheme(theme === "light" ? "dark" : "light")}
+      >
         Toggle Theme
       </button>
+      
       <QRCodeScanner onScan={handleScan} onError={handleError} />
 
       <div>

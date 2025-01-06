@@ -36,6 +36,39 @@ export const fetchAttendance = async () => {
   }
 };
 
+// Function to mark attendance (example API endpoint)
+export const markAttendance = async (scannedData) => {
+  try {
+    const response = await apiClient.post("/mark-attendance", { scannedData });
+    return response.data;
+  } catch (error) {
+    console.error("Error marking attendance", error);
+    throw error;
+  }
+};
+
+// Function to handle login (example API endpoint)
+export const login = async (username, password) => {
+  try {
+    const response = await apiClient.post("/admin/login", { username, password });
+    return response.data;
+  } catch (error) {
+    console.error("Error during login", error);
+    throw error;
+  }
+};
+
+// Function to register new user (signup)
+export const register = async (userData) => {
+  try {
+    const response = await apiClient.post("/admin/signup", userData); // Assuming your backend has this route
+    return response.data;
+  } catch (error) {
+    console.error("Error during registration", error);
+    throw error;
+  }
+};
+
 // You can add more API functions here as needed
 
 export default apiClient;
