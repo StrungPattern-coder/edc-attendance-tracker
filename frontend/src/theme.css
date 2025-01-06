@@ -1,0 +1,125 @@
+/* Global Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  body {
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+    background-color: #f4f4f4;
+    color: #333;
+    transition: background-color 0.3s, color 0.3s;
+  }
+  
+  /* Light Theme */
+  .light-theme {
+    background-color: #ffffff;
+    color: #333;
+  }
+  
+  .light-theme header {
+    background-color: #f8f9fa;
+  }
+  
+  .light-theme .card {
+    background-color: #ffffff;
+    border: 1px solid #ddd;
+  }
+  
+  /* Dark Theme */
+  .dark-theme {
+    background-color: #333;
+    color: #f4f4f4;
+  }
+  
+  .dark-theme header {
+    background-color: #444;
+  }
+  
+  .dark-theme .card {
+    background-color: #555;
+    border: 1px solid #666;
+  }
+  
+  /* Buttons */
+  button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  button:hover {
+    background-color: #007bff;
+  }
+  
+  button:focus {
+    outline: none;
+  }
+  
+  /* Header Styles */
+  header {
+    padding: 20px;
+    text-align: center;
+    background-color: #007bff;
+    color: #fff;
+  }
+  
+  /* Card Styles */
+  .card {
+    padding: 20px;
+    margin: 10px 0;
+    border-radius: 10px;
+    transition: transform 0.3s;
+  }
+  
+  .card:hover {
+    transform: scale(1.05);
+  }
+  
+  /* Form Styles */
+  input, select {
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    margin-bottom: 15px;
+    width: 100%;
+  }
+  
+  input:focus, select:focus {
+    outline: none;
+    border-color: #007bff;
+  }
+  
+  /* Footer Styles */
+  footer {
+    text-align: center;
+    padding: 10px;
+    background-color: #007bff;
+    color: #fff;
+    margin-top: 20px;
+  }
+  
+  /* Dark/Light Theme Toggle */
+  .theme-toggle {
+    display: flex;
+    justify-content: flex-end;
+    padding: 10px;
+  }
+  
+  .theme-toggle button {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: 16px;
+  }
+  
+  .theme-toggle button:hover {
+    background-color: #0056b3;
+  }
