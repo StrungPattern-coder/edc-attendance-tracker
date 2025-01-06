@@ -1,6 +1,5 @@
-// src/components/AttendancePage.js
 import React, { useState, useEffect } from "react";
-import { fetchAttendance } from "../services/api";
+import { fetchAttendance } from "../services/api"; // Corrected path
 
 const AttendancePage = () => {
   const [attendance, setAttendance] = useState([]);
@@ -25,12 +24,18 @@ const AttendancePage = () => {
           </tr>
         </thead>
         <tbody>
-          {attendance.map((entry, index) => (
-            <tr key={index}>
-              <td>{entry.date}</td>
-              <td>{entry.status}</td>
+          {attendance.length > 0 ? (
+            attendance.map((entry, index) => (
+              <tr key={index}>
+                <td>{entry.date}</td>
+                <td>{entry.status}</td>
+              </tr>
+            ))
+          ) : (
+            <tr>
+              <td colSpan="2">No attendance data available.</td>
             </tr>
-          ))}
+          )}
         </tbody>
       </table>
     </div>

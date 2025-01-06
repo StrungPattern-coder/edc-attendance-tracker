@@ -1,22 +1,38 @@
-// src/components/LoginPage.js
 import React, { useState } from "react";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import apiClient from "../services/api"; // Updated to the correct path
 
 const LoginPage = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const history = useHistory();
+  const [error, setError] = useState("");
+  const navigate = useNavigate(); // Updated to use React Router v6+ hook
 
-  const handleLogin = () => {
-    // For simplicity, using local validation. Replace with real backend validation.
-    if (username && password) {
-      history.push("/attendance");
+  const handleLogin = async () => {
+    try {
+      if (!username || !password) {
+        setError("Please enter both username and password.");
+        return;
+      }
+
+      // Make an API call to the backend
+      const response = await apiClient.post("/admin/login", { username, password });
+
+      // Save the token to localStorage
+      const token = response.data.token;
+      localStorage.setItem("authToken", token);
+
+      // Redirect to attendance page on successful login
+      navigate("/attendance");
+    } catch (err) {
+      setError(err.response?.data?.message || "Login failed. Please try again.");
     }
   };
 
   return (
     <div className="login-container">
-      <h2>Login</h2>
+      <h2>Admin Login</h2>
+      {error && <p className="error-message">{error}</p>}
       <input
         type="text"
         placeholder="Username"
