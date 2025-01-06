@@ -28,22 +28,23 @@ router.post('/mark-attendance', async (req, res) => {
             return res.status(403).json({ message: 'You are not authorized to mark attendance' });
         }
 
-        // Assuming you are sending the member's username and event ID to mark attendance
-        const { memberUsername, eventId } = req.body;
+        // Get the member's username and event from the request body
+        const { memberUsername, event } = req.body;
 
-        // Find the member and mark their attendance
+        // Find the member based on their username
         const member = await User.findOne({ username: memberUsername });
         if (!member) {
             return res.status(404).json({ message: 'Member not found' });
         }
 
-        // Create attendance entry
+        // Create an attendance entry for the member
         const attendance = new Attendance({
             member: member._id,
-            event: eventId,
-            date: new Date(),
+            event, // The event they attended
+            status: 'Present', // Default attendance status
         });
 
+        // Save the attendance record in the database
         await attendance.save();
 
         return res.status(200).json({ message: 'Attendance marked successfully' });
