@@ -2,7 +2,8 @@ import React, { useState, useEffect } from "react";
 import QRCodeScanner from "react-qr-scanner"; // QR scanner library
 import { useNavigate, Link } from "react-router-dom"; // Added Link for Signup
 import "./App.css"; // Import your existing CSS
-import { fetchAttendance, markAttendance } from "../services/api"; // Import API functions
+import { fetchAttendance, markAttendance } from "./services/api"; // Import API functions
+import { BrowserRouter } from 'react-router-dom'; // Added BrowserRouter to wrap the component
 
 function App() {
   const [attendance, setAttendance] = useState([]);
@@ -47,41 +48,50 @@ function App() {
   };
 
   return (
-    <div className={`App ${theme}`}>
-      <h1>Admin Dashboard</h1>
-      
-      {/* Signup Link */}
-      <Link to="/signup">Don't have an account? Signup here</Link>
+    <BrowserRouter>
+      <div className={`App ${theme}`}>
+        <h1>Admin Dashboard</h1>
 
-      <button
-        className="theme-toggle"
-        onClick={() => setTheme(theme === "light" ? "dark" : "light")}
-      >
-        Toggle Theme
-      </button>
-      
-      <QRCodeScanner onScan={handleScan} onError={handleError} />
+        {/* Signup Link */}
+        <Link to="/signup">Don't have an account? Signup here</Link>
 
-      <div>
-        <h3>Attendance Records</h3>
-        <table>
-          <thead>
-            <tr>
-              <th>Member</th>
-              <th>Status</th>
-            </tr>
-          </thead>
-          <tbody>
-            {attendance.map((entry, index) => (
-              <tr key={index}>
-                <td>{entry.name}</td>
-                <td>{entry.status}</td>
+        <button
+          className="theme-toggle"
+          onClick={() => setTheme(theme === "light" ? "dark" : "light")}
+        >
+          Toggle Theme
+        </button>
+
+        {/* QR Code Scanner */}
+        <QRCodeScanner onScan={handleScan} onError={handleError} />
+
+        <div>
+          <h3>Attendance Records</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>Member</th>
+                <th>Status</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {attendance.length === 0 ? (
+                <tr>
+                  <td colSpan="2">No records found.</td>
+                </tr>
+              ) : (
+                attendance.map((entry, index) => (
+                  <tr key={index}>
+                    <td>{entry.name}</td>
+                    <td>{entry.status}</td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
       </div>
-    </div>
+    </BrowserRouter>
   );
 }
 

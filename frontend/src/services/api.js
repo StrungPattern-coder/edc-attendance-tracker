@@ -1,5 +1,5 @@
 import axios from "axios";
-import { getToken } from "./auth"; // Import the getToken function from auth.js
+import { getToken } from "./auth"; // Ensure this function is defined in auth.js to get JWT from localStorage
 
 const API_BASE_URL = "http://localhost:3000"; // Change this if necessary
 
@@ -14,7 +14,7 @@ const apiClient = axios.create({
 // Add the Authorization header with the JWT token (if it exists)
 apiClient.interceptors.request.use(
   (config) => {
-    const token = getToken(); // Get token from localStorage
+    const token = getToken(); // Get token from localStorage (getToken should be defined in auth.js)
     if (token) {
       config.headers["Authorization"] = `Bearer ${token}`; // Attach the token to each request
     }
@@ -32,7 +32,7 @@ export const fetchAttendance = async () => {
     return response.data;
   } catch (error) {
     console.error("Error fetching attendance data", error);
-    return [];
+    return []; // Return an empty array in case of an error
   }
 };
 
@@ -43,7 +43,7 @@ export const markAttendance = async (scannedData) => {
     return response.data;
   } catch (error) {
     console.error("Error marking attendance", error);
-    throw error;
+    throw error; // Throw error for handling in the calling component
   }
 };
 
@@ -54,7 +54,7 @@ export const login = async (username, password) => {
     return response.data;
   } catch (error) {
     console.error("Error during login", error);
-    throw error;
+    throw error; // Throw error for handling in the calling component
   }
 };
 
@@ -65,7 +65,7 @@ export const register = async (userData) => {
     return response.data;
   } catch (error) {
     console.error("Error during registration", error);
-    throw error;
+    throw error; // Throw error for handling in the calling component
   }
 };
 
