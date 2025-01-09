@@ -1,21 +1,20 @@
-/* src/styles/App.css */
+/* Base styles */
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
 
 /* Light mode styling */
 body.light {
   background-color: white;
   color: black;
-  font-family: Arial, sans-serif;
-  margin: 0;
-  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 /* Dark mode styling */
 body.dark {
   background-color: #121212;
   color: white;
-  font-family: Arial, sans-serif;
-  margin: 0;
-  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 /* Theme toggle button */
@@ -42,4 +41,184 @@ button.theme-toggle:hover {
 button.theme-toggle:focus {
   outline: none;
   box-shadow: 0 0 5px rgba(0, 123, 255, 0.8);
+}
+
+/* Navigation links */
+nav.navigation {
+  display: flex;
+  justify-content: flex-end;
+  padding: 10px 20px;
+}
+
+nav.navigation a.signup-link {
+  text-decoration: none;
+  color: #007bff;
+  font-size: 14px;
+  font-weight: bold;
+  margin-right: 10px;
+}
+
+nav.navigation a.signup-link:hover {
+  text-decoration: underline;
+}
+
+/* QR Scanner */
+.qr-scanner-container {
+  margin: 20px auto;
+  width: 80%;
+  max-width: 600px;
+  text-align: center;
+}
+
+.qr-scanner-container h3 {
+  font-size: 18px;
+  margin-bottom: 10px;
+}
+
+/* Attendance section */
+.attendance-section {
+  margin: 20px auto;
+  width: 80%;
+  max-width: 800px;
+}
+
+.attendance-section h3 {
+  font-size: 20px;
+  margin-bottom: 15px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+}
+
+table th,
+table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: center;
+}
+
+table th {
+  background-color: #007bff;
+  color: white;
+  font-weight: bold;
+}
+
+table td span.status {
+  display: inline-block;
+  padding: 5px 10px;
+  border-radius: 3px;
+  font-size: 12px;
+}
+
+table td span.status.present {
+  background-color: #28a745;
+  color: white;
+}
+
+table td span.status.absent {
+  background-color: #dc3545;
+  color: white;
+}
+
+.no-records {
+  font-style: italic;
+  color: gray;
+}
+
+/* Loading and error messages */
+.loading {
+  text-align: center;
+  font-size: 16px;
+  color: #007bff;
+}
+
+.error {
+  text-align: center;
+  font-size: 16px;
+  color: #dc3545;
+  margin-top: 10px;
+}
+
+/* Signup form */
+.signup-container {
+  margin: 50px auto;
+  width: 80%;
+  max-width: 400px;
+  padding: 20px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.signup-container h2 {
+  text-align: center;
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+
+.signup-container form {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+.form-group label {
+  font-weight: bold;
+  margin-bottom: 5px;
+  display: block;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 14px;
+  transition: border-color 0.2s ease;
+}
+
+.form-group input:focus {
+  border-color: #007bff;
+  outline: none;
+}
+
+button.submit-button {
+  background-color: #007bff;
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+button.submit-button:hover {
+  background-color: #0056b3;
+  transform: scale(1.02);
+}
+
+button.submit-button:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+}
+
+.back-link {
+  display: block;
+  margin-top: 15px;
+  text-align: center;
+  color: #007bff;
+  text-decoration: none;
+}
+
+.back-link:hover {
+  text-decoration: underline;
 }
