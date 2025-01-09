@@ -1,16 +1,15 @@
-const express = require('express');
-const cors = require('cors');
-const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
-const helmet = require('helmet');
-require('dotenv').config(); // Load environment variables from a .env file
+import express from 'express';
+import cors from 'cors';
+import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
+import helmet from 'helmet';
+import dotenv from 'dotenv';
 
-// Import Models
-const User = require('./models/User');
-const Attendance = require('./models/Attendance');
+import connectDB from './config/db.js';
+import User from './models/User.js';
+import Attendance from './models/Attendance.js';
 
-// Import Database Connection
-const connectDB = require('./config/db');
+dotenv.config(); // Load environment variables from a .env file
 
 // Initialize App
 const app = express();
@@ -25,7 +24,7 @@ const JWT_SECRET = process.env.JWT_SECRET || 'your_secret_key'; // Fallback for 
 const PORT = process.env.PORT || 3000;
 
 // Connect to MongoDB
-connectDB();
+await connectDB();
 
 // Helper Function: Authenticate JWT
 const authenticateJWT = (req, res, next) => {
