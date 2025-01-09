@@ -1,15 +1,22 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Suspense } from "react";
 import QRCodeScanner from "react-qr-scanner";
 import { useNavigate, Link, Routes, Route } from "react-router-dom";
 import "./App.css";
 import { fetchAttendance, markAttendance } from "./services/api";
+import "react-toastify/dist/ReactToastify.css";
+
+// Lazy load the Signup component
+const Signup = React.lazy(() => import("./Signup"));
+const UserDashboard = React.lazy(() => import("./UserDashboard"));
+const AdminDashboard = React.lazy(() => import("./AdminDashboard"));
+const { ToastContainer, toast } = require('react-toastify');
 
 // Create a separate component for the main dashboard
-function Dashboard({ theme, setTheme, attendance, handleScan, handleError, isLoading, error }) {
+function Dashboard({ theme, setTheme, attendance, handleScan, handleError, isLoading, error, isAdmin }) {
   return (
     <div className={`App ${theme}`}>
-      <h1>Admin Dashboard</h1>
-      
+      <h1>{isAdmin ? "Admin Dashboard" : "User Dashboard"}</h1>
+
       <nav className="navigation">
         <Link to="/signup" className="signup-link">Don't have an account? Signup here</Link>
         <button
@@ -21,168 +28,68 @@ function Dashboard({ theme, setTheme, attendance, handleScan, handleError, isLoa
         </button>
       </nav>
 
-      <div className="qr-scanner-container">
-        <h3>Scan QR Code</h3>
-        <QRCodeScanner 
-          onScan={handleScan} 
-          onError={handleError}
-          style={{ width: '100%' }}
-        />
-      </div>
+      {isAdmin ? (
+        <div className="qr-scanner-container">
+          <h3>Scan QR Code</h3>
+          <QRCodeScanner
+            onScan={handleScan}
+            onError={handleError}
+            style={{ width: '100%' }}
+          />
+        </div>
+      ) : (
+        <div className="attendance-section">
+          <h3>Your Attendance Records</h3>
+          {isLoading && (
+            <div className="loading">Loading attendance records...</div>
+          )}
 
-      <div className="attendance-section">
-        <h3>Attendance Records</h3>
-        
-        {isLoading && (
-          <div className="loading">Loading attendance records...</div>
-        )}
+          {error && (
+            <div className="error">Error: {error}</div>
+          )}
 
-        {error && (
-          <div className="error">Error: {error}</div>
-        )}
-
-        {!isLoading && !error && (
-          <table>
-            <thead>
-              <tr>
-                <th>Member</th>
-                <th>Status</th>
-                <th>Timestamp</th>
-              </tr>
-            </thead>
-            <tbody>
-              {attendance.length === 0 ? (
+          {!isLoading && !error && (
+            <table>
+              <thead>
                 <tr>
-                  <td colSpan="3" className="no-records">No records found.</td>
+                  <th>Member</th>
+                  <th>Status</th>
+                  <th>Timestamp</th>
                 </tr>
-              ) : (
-                attendance.map((entry, index) => (
-                  <tr key={index}>
-                    <td>{entry.name}</td>
-                    <td>
-                      <span className={`status ${entry.status.toLowerCase()}`}>
-                        {entry.status}
-                      </span>
-                    </td>
-                    <td>{new Date(entry.timestamp).toLocaleString()}</td>
+              </thead>
+              <tbody>
+                {attendance.length === 0 ? (
+                  <tr>
+                    <td colSpan="3" className="no-records">No records found.</td>
                   </tr>
-                ))
-              )}
-            </tbody>
-          </table>
-        )}
-      </div>
-    </div>
-  );
-}
-
-function Signup() {
-  const navigate = useNavigate();
-  const [formData, setFormData] = useState({
-    username: '',
-    email: '',
-    password: '',
-    confirmPassword: ''
-  });
-  const [error, setError] = useState('');
-
-  const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value
-    });
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setError('');
-
-    // Basic validation
-    if (formData.password !== formData.confirmPassword) {
-      setError('Passwords do not match');
-      return;
-    }
-
-    try {
-      // Implement your signup API call here
-      // const response = await signupUser(formData);
-      // if (response.success) {
-      //   navigate('/');
-      // }
-      console.log('Signup form submitted:', formData);
-      navigate('/');
-    } catch (err) {
-      setError(err.message || 'An error occurred during signup');
-    }
-  };
-
-  return (
-    <div className="signup-container">
-      <h2>Sign Up</h2>
-      {error && <div className="error">{error}</div>}
-      
-      <form onSubmit={handleSubmit}>
-        <div className="form-group">
-          <label htmlFor="username">Username</label>
-          <input
-            type="text"
-            id="username"
-            name="username"
-            value={formData.username}
-            onChange={handleChange}
-            required
-          />
+                ) : (
+                  attendance.map((entry, index) => (
+                    <tr key={index}>
+                      <td>{entry.name}</td>
+                      <td>
+                        <span className={`status ${entry.status.toLowerCase()}`}>
+                          {entry.status}
+                        </span>
+                      </td>
+                      <td>{new Date(entry.timestamp).toLocaleString()}</td>
+                    </tr>
+                  ))
+                )}
+              </tbody>
+            </table>
+          )}
         </div>
-
-        <div className="form-group">
-          <label htmlFor="email">Email</label>
-          <input
-            type="email"
-            id="email"
-            name="email"
-            value={formData.email}
-            onChange={handleChange}
-            required
-          />
-        </div>
-
-        <div className="form-group">
-          <label htmlFor="password">Password</label>
-          <input
-            type="password"
-            id="password"
-            name="password"
-            value={formData.password}
-            onChange={handleChange}
-            required
-          />
-        </div>
-
-        <div className="form-group">
-          <label htmlFor="confirmPassword">Confirm Password</label>
-          <input
-            type="password"
-            id="confirmPassword"
-            name="confirmPassword"
-            value={formData.confirmPassword}
-            onChange={handleChange}
-            required
-          />
-        </div>
-
-        <button type="submit" className="submit-button">Sign Up</button>
-      </form>
-
-      <Link to="/" className="back-link">Back to Dashboard</Link>
+      )}
     </div>
   );
 }
 
 function App() {
   const [attendance, setAttendance] = useState([]);
-  const [theme, setTheme] = useState("light");
+  const [theme, setTheme] = useState(localStorage.getItem('theme') || "light");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [isAdmin, setIsAdmin] = useState(false); // New state to check if the user is an admin
 
   useEffect(() => {
     // Apply theme to body element
@@ -211,42 +118,80 @@ function App() {
       try {
         const response = await markAttendance(data.text);
         if (response.success) {
-          console.log("Attendance marked successfully");
+          toast.success("Attendance marked successfully!");
           const updatedAttendance = await fetchAttendance();
           setAttendance(updatedAttendance.data);
         } else {
-          setError("Error marking attendance");
+          toast.error("Error marking attendance");
         }
       } catch (error) {
-        console.error("Error connecting to backend:", error);
-        setError("Failed to mark attendance");
+        toast.error("Failed to mark attendance");
       }
     }
   };
 
   const handleError = (err) => {
     console.error("Scanner error:", err);
-    setError("QR Scanner error: " + err.message);
+    if (err.name === "NotAllowedError") {
+      setError("Permission denied. Please allow camera access.");
+    } else if (err.name === "NotFoundError") {
+      setError("No camera found. Please check your device.");
+    } else {
+      setError("QR Scanner error: " + err.message);
+    }
+  };
+
+  const toggleTheme = () => {
+    const newTheme = theme === 'light' ? 'dark' : 'light';
+    setTheme(newTheme);
+    localStorage.setItem('theme', newTheme);
   };
 
   return (
-    <Routes>
-      <Route
-        path="/"
-        element={
-          <Dashboard
-            theme={theme}
-            setTheme={setTheme}
-            attendance={attendance}
-            handleScan={handleScan}
-            handleError={handleError}
-            isLoading={isLoading}
-            error={error}
-          />
-        }
-      />
-      <Route path="/signup" element={<Signup />} />
-    </Routes>
+    <div>
+      <ToastContainer />
+      <Routes>
+        <Route
+          path="/"
+          element={
+            <Dashboard
+              theme={theme}
+              setTheme={setTheme}
+              attendance={attendance}
+              handleScan={handleScan}
+              handleError={handleError}
+              isLoading={isLoading}
+              error={error}
+              isAdmin={isAdmin}
+            />
+          }
+        />
+        <Route
+          path="/signup"
+          element={
+            <Suspense fallback={<div>Loading...</div>}>
+              <Signup />
+            </Suspense>
+          }
+        />
+        <Route
+          path="/user-dashboard"
+          element={
+            <Suspense fallback={<div>Loading...</div>}>
+              <UserDashboard />
+            </Suspense>
+          }
+        />
+        <Route
+          path="/admin-dashboard"
+          element={
+            <Suspense fallback={<div>Loading...</div>}>
+              <AdminDashboard />
+            </Suspense>
+          }
+        />
+      </Routes>
+    </div>
   );
 }
 
